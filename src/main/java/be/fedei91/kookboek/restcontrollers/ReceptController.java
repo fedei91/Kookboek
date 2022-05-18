@@ -10,9 +10,13 @@ import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.hateoas.server.TypedEntityLinks;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recepten")
@@ -65,6 +69,16 @@ class ReceptController {
         var headers = new HttpHeaders();
         headers.setLocation(links.linkToItemResource(recept).toUri());
         return headers;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Map<String, String> verkeerdeData(MethodArgumentNotValidException ex) {
+        return ex.getBindingResult().getFieldErrors()
+                .stream().collect(
+                        Collectors.toMap(FieldError::getField,
+                                FieldError::getDefaultMessage)
+                );
     }
 
     @PutMapping("{id}")

@@ -1,9 +1,8 @@
 package be.fedei91.kookboek.domain;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "recepten")
@@ -20,8 +19,14 @@ public class Recept {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @NotBlank
     private String naam;
+    @NotNull
+    @NotBlank
     private String ingredienten;
+    @NotNull
+    @NotBlank
     private String instructies;
 
     public Recept(String naam, String ingredienten, String instructies) {
