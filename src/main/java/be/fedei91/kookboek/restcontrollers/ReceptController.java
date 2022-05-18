@@ -26,6 +26,17 @@ class ReceptController {
         this.links = links.forType(Recept.class, Recept::getId);
     }
 
+    @GetMapping
+    CollectionModel<EntityModel<ReceptIdNaam>> findAll() {
+        return CollectionModel.of(
+                receptService.findAll().stream()
+                        .map(recept ->
+                                EntityModel.of(new ReceptIdNaam(recept),
+                                        links.linkToItemResource(recept)))
+                        ::iterator,
+                links.linkToCollectionResource());
+    }
+
     @GetMapping("{id}")
     EntityModel<Recept> get(@PathVariable long id) {
         return receptService.findById(id)
@@ -59,5 +70,23 @@ class ReceptController {
     @PutMapping("{id}")
     void put(@PathVariable long id, @RequestBody @Valid Recept recept) {
         receptService.update(recept.withId(id));
+    }
+
+    private static class ReceptIdNaam {
+        private final long id;
+        private final String naam;
+
+        ReceptIdNaam(Recept recept) {
+            id = recept.getId();
+            naam = recept.getNaam();
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public String getNaam() {
+            return naam;
+        }
     }
 }
