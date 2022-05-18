@@ -6,6 +6,8 @@ import be.fedei91.kookboek.services.ReceptService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/recepten")
 class ReceptController {
@@ -24,4 +26,9 @@ class ReceptController {
     @ExceptionHandler(ReceptNietGevondenException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     void receptNietGevonden() {}
+
+    @DeleteMapping("{id}")
+    void delete(@PathVariable long id) {
+        receptService.delete(id);
+    }
 }
