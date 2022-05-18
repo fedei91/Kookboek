@@ -18,6 +18,7 @@ class ReceptController {
 
     @GetMapping("{id}")
     Recept get(@PathVariable long id) {
-        return receptService.findById(id).get();
+        return receptService.findById(id)
+                .orElseThrow(ReceptNietGevondenException::new);
     }
 }
