@@ -1,9 +1,21 @@
 package be.fedei91.kookboek.domain;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "recepten")
+
+/**
+ * Voeg deze regels toe:
+ *      @XmlRootElement
+ *      @@XmlAccessorType(XmlAccessType.FIELD
+ * en geef mee aan in de GET request dat je een XML header accept:
+ *      Accept: application/xml
+*/
+
 public class Recept {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +30,8 @@ public class Recept {
         this.instructies = instructies;
     }
 
-    protected Recept() {}
+    protected Recept() {
+    }
 
     public Long getId() {
         return id;
@@ -28,9 +41,13 @@ public class Recept {
         this.id = id;
     }
 
-    public String getNaam() { return naam; }
+    public String getNaam() {
+        return naam;
+    }
 
-    public void setNaam(String naam) { this.naam = naam; }
+    public void setNaam(String naam) {
+        this.naam = naam;
+    }
 
     public String getIngredienten() {
         return ingredienten;
