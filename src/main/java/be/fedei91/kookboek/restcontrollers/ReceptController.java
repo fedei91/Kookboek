@@ -36,4 +36,9 @@ class ReceptController {
     void post(@RequestBody Recept recept) {
         receptService.create(recept);
     }
+
+    @PutMapping("{id}")
+    void put(@PathVariable long id, @RequestBody @Valid Recept recept) {
+        receptService.update(recept.withId(id));
+    }
 }

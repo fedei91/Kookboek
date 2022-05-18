@@ -33,6 +33,12 @@ public class Recept {
     protected Recept() {
     }
 
+    public Recept withId(long id) {
+        var receptMetId = new Recept(naam, ingredienten, instructies);
+        receptMetId.id = id;
+        return receptMetId;
+    }
+
     public Long getId() {
         return id;
     }
