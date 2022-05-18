@@ -8,12 +8,14 @@ public class Recept {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String naam;
     private String ingredienten;
-    private String beschrijving;
+    private String instructies;
 
-    public Recept(String ingredienten, String beschrijving) {
+    public Recept(String naam, String ingredienten, String instructies) {
+        this.naam = naam;
         this.ingredienten = ingredienten;
-        this.beschrijving = beschrijving;
+        this.instructies = instructies;
     }
 
     protected Recept() {}
@@ -26,6 +28,10 @@ public class Recept {
         this.id = id;
     }
 
+    public String getNaam() { return naam; }
+
+    public void setNaam(String naam) { this.naam = naam; }
+
     public String getIngredienten() {
         return ingredienten;
     }
@@ -34,11 +40,11 @@ public class Recept {
         this.ingredienten = ingredienten;
     }
 
-    public String getBeschrijving() {
-        return beschrijving;
+    public String getInstructies() {
+        return instructies;
     }
 
-    public void setBeschrijving(String beschrijving) {
-        this.beschrijving = beschrijving;
+    public void setInstructies(String instructies) {
+        this.instructies = instructies;
     }
 }
