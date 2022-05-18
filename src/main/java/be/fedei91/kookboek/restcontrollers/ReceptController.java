@@ -3,6 +3,8 @@ package be.fedei91.kookboek.restcontrollers;
 import be.fedei91.kookboek.domain.Recept;
 import be.fedei91.kookboek.exceptions.ReceptNietGevondenException;
 import be.fedei91.kookboek.services.ReceptService;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.hateoas.server.TypedEntityLinks;
@@ -25,8 +27,14 @@ class ReceptController {
     }
 
     @GetMapping("{id}")
-    Recept get(@PathVariable long id) {
+    EntityModel<Recept> get(@PathVariable long id) {
         return receptService.findById(id)
+                .map(
+                        recept -> EntityModel.of(recept,
+                                links.linkToItemResource(recept),
+                                links.linkForItemResource(recept)
+                                        .slash("gebruikers").withRel("gebruikers"))
+                )
                 .orElseThrow(ReceptNietGevondenException::new);
     }
 
