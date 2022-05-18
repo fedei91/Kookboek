@@ -20,4 +20,8 @@ class ReceptController {
         return receptService.findById(id)
                 .orElseThrow(ReceptNietGevondenException::new);
     }
+
+    @ExceptionHandler(ReceptNietGevondenException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    void receptNietGevonden() {}
 }
