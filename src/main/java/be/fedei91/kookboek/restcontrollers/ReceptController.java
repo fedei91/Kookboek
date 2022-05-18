@@ -31,4 +31,9 @@ class ReceptController {
     void delete(@PathVariable long id) {
         receptService.delete(id);
     }
+
+    @PostMapping
+    void post(@RequestBody Recept recept) {
+        receptService.create(recept);
+    }
 }
