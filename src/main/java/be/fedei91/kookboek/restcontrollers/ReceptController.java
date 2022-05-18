@@ -3,6 +3,7 @@ package be.fedei91.kookboek.restcontrollers;
 import be.fedei91.kookboek.domain.Recept;
 import be.fedei91.kookboek.exceptions.ReceptNietGevondenException;
 import be.fedei91.kookboek.services.ReceptService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.EntityLinks;
@@ -31,6 +32,7 @@ class ReceptController {
     }
 
     @GetMapping
+    @Operation(summary = "Alle recepten zoeken")
     CollectionModel<EntityModel<ReceptIdNaam>> findAll() {
         return CollectionModel.of(
                 receptService.findAll().stream()
@@ -42,13 +44,14 @@ class ReceptController {
     }
 
     @GetMapping("{id}")
+    @Operation(summary = "Een recept zoeken op id")
     EntityModel<Recept> get(@PathVariable long id) {
         return receptService.findById(id)
                 .map(
                         recept -> EntityModel.of(recept,
                                 links.linkToItemResource(recept),
                                 links.linkForItemResource(recept)
-                                        .slash("gebruikers").withRel("gebruikers"))
+                                        .slash("ingredienten").withRel("ingredienten"))
                 )
                 .orElseThrow(ReceptNietGevondenException::new);
     }
@@ -58,12 +61,14 @@ class ReceptController {
     void receptNietGevonden() {}
 
     @DeleteMapping("{id}")
+    @Operation(summary = "Een recept verwijderen")
     void delete(@PathVariable long id) {
         receptService.delete(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Een recept toevoegen")
     HttpHeaders create(@RequestBody @Valid Recept recept) {
         receptService.create(recept);
         var headers = new HttpHeaders();
@@ -82,6 +87,7 @@ class ReceptController {
     }
 
     @PutMapping("{id}")
+    @Operation(summary = "Een recept wijzigen")
     void put(@PathVariable long id, @RequestBody @Valid Recept recept) {
         receptService.update(recept.withId(id));
     }
