@@ -1,2 +1,4 @@
 insert into recepten(naam, ingredienten, instructies)
-values('test_recept', 'test_ingredienten', 'test_instructies');
+values('test', 'test', 'test'),
+      ('test2', 'test2', 'test2'),
+      ('test3', 'test3', 'test3');

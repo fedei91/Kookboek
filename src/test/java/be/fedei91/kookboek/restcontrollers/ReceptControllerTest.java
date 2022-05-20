@@ -1,9 +1,6 @@
 package be.fedei91.kookboek.restcontrollers;
 
-import be.fedei91.kookboek.domain.Recept;
 import be.fedei91.kookboek.services.ReceptService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,26 +10,25 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql("/insertRecept.sql")
 class ReceptControllerTest extends AbstractTransactionalJUnit4SpringContextTests {
+    private static final String RECEPTEN = "recepten";
     private final MockMvc mvc;
     private final ReceptService receptService;
-    private final ReceptController receptController;
 
-    public ReceptControllerTest(MockMvc mvc, ReceptController receptController, ReceptService receptService) {
+    public ReceptControllerTest(MockMvc mvc, ReceptService receptService) {
         this.mvc = mvc;
-        this.receptController = receptController;
         this.receptService = receptService;
     }
 
     private long idVanTestRecept() {
         return jdbcTemplate.queryForObject(
-                "select id from recepten where naam = 'test_recept'", Long.class
+                "select id from recepten where naam = 'test'", Long.class
         );
     }
 
@@ -46,9 +42,16 @@ class ReceptControllerTest extends AbstractTransactionalJUnit4SpringContextTests
     @DisplayName("GET een bestaand recept")
     @Test
     void receptLezen() throws Exception {
-        var id = idVanTestRecept();
-        mvc.perform(get("/recepten/{id}", id))
+        mvc.perform(get("/recepten/{id}", idVanTestRecept()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(id));
+                .andExpect(jsonPath("id").value(idVanTestRecept()));
+    }
+
+    @DisplayName("GET alle recepten")
+    @Test
+    void alleReceptenLezen() throws Exception {
+        mvc.perform(get("/recepten", idVanTestRecept()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.receptIdNaamList", hasSize(countRowsInTable(RECEPTEN))));
     }
 }
