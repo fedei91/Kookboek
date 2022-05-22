@@ -5,12 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -53,5 +55,20 @@ class ReceptControllerTest extends AbstractTransactionalJUnit4SpringContextTests
         mvc.perform(get("/recepten", idVanTestRecept()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.receptIdNaamList", hasSize(countRowsInTable(RECEPTEN))));
+    }
+
+    @DisplayName("DELETE een recept")
+    @Test
+    void eenReceptVerwijderen() throws Exception {
+        mvc.perform(delete("/recepten/{id}", idVanTestRecept()))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("DELETE een onbestaand recept")
+    @Test
+    void eenOnbestaandReceptVerwijderen() throws Exception {
+        mvc.perform(delete("/recepten/{id}", -1))
+                .andExpect(status().isNotFound());
+
     }
 }
