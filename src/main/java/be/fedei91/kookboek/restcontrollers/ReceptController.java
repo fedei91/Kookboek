@@ -89,7 +89,7 @@ class ReceptController {
     @PutMapping("{id}")
     @Operation(summary = "Een recept wijzigen")
     void put(@PathVariable long id, @RequestBody @Valid Recept recept) {
-        receptService.update(recept.withId(id));
+        receptService.update(recept.metId(id));
     }
 
     private static class ReceptIdNaam {

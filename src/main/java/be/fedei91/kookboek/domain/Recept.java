@@ -38,7 +38,7 @@ public class Recept {
     protected Recept() {
     }
 
-    public Recept withId(long id) {
+    public Recept metId(long id) {
         var receptMetId = new Recept(naam, ingredienten, instructies);
         receptMetId.id = id;
         return receptMetId;

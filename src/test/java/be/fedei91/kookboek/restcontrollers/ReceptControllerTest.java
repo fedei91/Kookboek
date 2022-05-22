@@ -99,4 +99,22 @@ class ReceptControllerTest extends AbstractTransactionalJUnit4SpringContextTests
                         .content("{\"naam\": \"test\", \"ingredienten\": \"test\", \"instructies\": \"\"}"))
                 .andExpect(status().isBadRequest());
     }
+
+    @DisplayName("PUT een bestaand recept")
+    @Test
+    void eenBestaandReceptWijzigen() throws Exception {
+        mvc.perform(put("/recepten/{id}", idVanTestRecept())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"naam\": \"nieuwe_test\", \"ingredienten\": \"test\", \"instructies\": \"test\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("PUT een bestaand recept met verkeerde data")
+    @Test
+    void eenOnbestaandReceptWijzigen() throws Exception {
+        mvc.perform(put("/recepten/{id}", idVanTestRecept())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"naam\": \"\", \"ingredienten\": \"test\", \"instructies\": \"test\"}"))
+                .andExpect(status().isBadRequest());
+    }
 }
